@@ -9,13 +9,6 @@ from lxml import etree
 
 import requests
 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.common.exceptions import TimeoutException
-
-
-EMPTY_FILE = ""
-
 OUT_DIR = './out_anzhi/'
 
 header = {
@@ -61,10 +54,10 @@ class AnzhiDownloader():
 
 
     def download_apps(self, start, end, total):
-        self.crawl_initial_urls(1, 1)
+        self.crawl_initial_urls(start, end)
         self.total = total
-        dl_fname = self.crawl_download_urls(1, 1)
-        self.aria2c_download(dl_fname, 10)
+        dl_fname = self.crawl_download_urls(start, end)
+        self.aria2c_download(dl_fname, total)
 
 
     def crawl_initial_urls(self, start, end):
@@ -139,6 +132,7 @@ class AnzhiDownloader():
                 rm_file = out + "*.aria2"
                 if os.path.exists(rm_file):
                     os.remove(out + "*.aria2")
+                time.sleep(1)
             else:
                 print(f"{app_name} has already downloaded. Stop")
 
@@ -179,4 +173,4 @@ class AnzhiDownloader():
 if __name__ == '__main__':
     cat = Category["COMPREHENSIVE"]
     anzhi = AnzhiDownloader(cat)
-    anzhi.download_apps(1, 1, 2)
+    anzhi.download_apps(2, 4, 60)
